@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.lovish888.devrev.movies.R
 import com.lovish888.devrev.movies.databinding.FragmentMovieDetailBinding
 import com.lovish888.devrev.movies.types.Movie
+import com.lovish888.devrev.movies.util.IMAGE_BASE_URL
 import com.lovish888.devrev.movies.vm.MovieDetailsVM
 
 class MovieDetailFragment : Fragment() {
@@ -31,6 +32,12 @@ class MovieDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupVM()
+
+    }
+
+    private fun setupVM() {
         viewModel = ViewModelProvider(this)[MovieDetailsVM::class.java]
 
         val movieId = MovieDetailFragmentArgs.fromBundle(requireArguments()).movieId
@@ -41,7 +48,7 @@ class MovieDetailFragment : Fragment() {
             }
         }
 
-        Log.d("Filter", "Fetching movieId $movieId")
+        // Fetch movie details
         viewModel.fetchMovieDetails(movieId)
     }
 
@@ -50,7 +57,7 @@ class MovieDetailFragment : Fragment() {
         binding.movieOverview.text = movie.overview
 
         Glide.with(this)
-            .load("https://image.tmdb.org/t/p/w500/${movie.posterPath}")
+            .load("${IMAGE_BASE_URL}${movie.posterPath}")
             .apply(
                 RequestOptions()
                     .format(DecodeFormat.PREFER_ARGB_8888)

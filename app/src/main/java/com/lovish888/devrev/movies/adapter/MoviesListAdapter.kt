@@ -13,6 +13,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.RequestOptions
 import com.lovish888.devrev.movies.R
 import com.lovish888.devrev.movies.types.Movie
+import com.lovish888.devrev.movies.util.IMAGE_BASE_URL
 
 class MoviesListAdapter(private val onClick: (Int) -> Unit) :
     ListAdapter<Movie, MoviesListAdapter.MovieViewHolder>(MovieDiffCallback()) {
@@ -46,7 +47,7 @@ class MoviesListAdapter(private val onClick: (Int) -> Unit) :
             movieTitle.text = movie.title
             moviesReleaseDate.text = movie.releaseDate
             Glide.with(itemView.context)
-                .load("https://image.tmdb.org/t/p/w500/${movie.posterPath}")
+                .load("${IMAGE_BASE_URL}${movie.posterPath}")
                 .apply(
                     RequestOptions()
                         .format(DecodeFormat.PREFER_ARGB_8888)

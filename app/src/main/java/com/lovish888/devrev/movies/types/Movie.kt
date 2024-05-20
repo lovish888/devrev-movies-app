@@ -3,10 +3,7 @@ package com.lovish888.devrev.movies.types
 import com.google.gson.annotations.SerializedName
 
 data class MovieListResponse(
-    val page: Int,
-    val results: List<Movie>,
-    @SerializedName("total_pages")
-    val totalPages: Int,
+    val results: List<Movie>
 )
 
 data class Movie(

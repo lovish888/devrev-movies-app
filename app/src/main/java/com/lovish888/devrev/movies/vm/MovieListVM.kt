@@ -13,7 +13,6 @@ import com.lovish888.devrev.networking.ApiRequest
 class MovieListVM: ViewModel() {
 
     private val _movies = MutableLiveData<List<Movie>>()
-    private val _currentPage = MutableLiveData<Int>()
     val movies: LiveData<List<Movie>> = _movies
 
     fun fetchMovies(type: String) {
@@ -23,7 +22,6 @@ class MovieListVM: ViewModel() {
             onSuccess = {
                 Log.d("Filter", "Got movies - ${it.results.size}")
                 _movies.postValue(it.results)
-                _currentPage.postValue(it.page)
             },
             onFailure = {
                 Log.d("Filter", "Error fetching movies: ${it.message}")

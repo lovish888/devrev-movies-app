@@ -20,31 +20,38 @@ class MoviesListFragment : Fragment() {
 
     private lateinit var viewModel: MovieListVM
     private lateinit var adapter: MoviesListAdapter
+    private var tabType = "latest"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        tabType = arguments?.getString("tabType") ?: "latest"
+
+        // Setup RecyclerView and its Adapter
         val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
-
-        val tabType = arguments?.getString("tabType") ?: "latest"
-
-        viewModel = ViewModelProvider(this)[MovieListVM::class.java]
-
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView?.layoutManager = LinearLayoutManager(context)
         adapter = MoviesListAdapter { movieId ->
             val action = MoviesListTabFragmentDirections.actionMoviesListTabFragmentToMovieDetailFragment(movieId = movieId)
             findNavController().navigate(action)
         }
-        recyclerView.adapter = adapter
+        recyclerView?.adapter = adapter
 
+        // Setup ViewModel
+        setupVM()
+
+        return view
+    }
+
+    private fun setupVM() {
+        viewModel = ViewModelProvider(this)[MovieListVM::class.java]
         viewModel.movies.observe(viewLifecycleOwner) { movies ->
             adapter.submitList(movies)
         }
 
+        // Fetch Movies List
         viewModel.fetchMovies(tabType)
-
-        return view
     }
 }

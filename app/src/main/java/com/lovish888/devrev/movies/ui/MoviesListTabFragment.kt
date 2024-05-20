@@ -27,6 +27,7 @@ class MoviesListTabFragment : Fragment() {
         val adapter = MoviesPagerAdapter(this)
         viewPager.adapter = adapter
 
+        // TabLayout click listener
         tabLayout.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_latest -> viewPager.currentItem = 0
@@ -35,6 +36,7 @@ class MoviesListTabFragment : Fragment() {
             true
         }
 
+        // ViewPager page change listener
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)

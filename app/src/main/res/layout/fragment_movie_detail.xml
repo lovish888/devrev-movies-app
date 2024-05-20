@@ -21,7 +21,8 @@
             android:id="@+id/movie_poster"
             android:layout_width="200dp"
             android:layout_height="300dp"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/movie_poster" />
 
     </androidx.cardview.widget.CardView>
 
