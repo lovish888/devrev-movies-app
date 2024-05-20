@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.request.RequestOptions
+import com.lovish888.devrev.movies.R
 import com.lovish888.devrev.movies.databinding.FragmentMovieDetailBinding
 import com.lovish888.devrev.movies.types.Movie
 import com.lovish888.devrev.movies.vm.MovieDetailsVM
@@ -45,9 +48,14 @@ class MovieDetailFragment : Fragment() {
     private fun displayMovieDetails(movie: Movie) {
         binding.movieTitle.text = movie.title
         binding.movieOverview.text = movie.overview
+
         Glide.with(this)
             .load("https://image.tmdb.org/t/p/w500/${movie.posterPath}")
-//            .placeholder(R.drawable.placeholder)
+            .apply(
+                RequestOptions()
+                    .format(DecodeFormat.PREFER_ARGB_8888)
+                    .placeholder(R.drawable.movie_placeholder)
+            )
             .into(binding.moviePoster)
     }
 }
