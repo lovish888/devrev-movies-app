@@ -1,6 +1,7 @@
 package com.lovish888.devrev.movies.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,28 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.lovish888.devrev.movies.R
 import com.lovish888.devrev.movies.databinding.FragmentMovieDetailBinding
-import com.lovish888.devrev.movies.databinding.FragmentMoviesListTabBinding
 import com.lovish888.devrev.movies.types.Movie
-import com.lovish888.devrev.movies.viewmodel.MovieDetailsVM
+import com.lovish888.devrev.movies.vm.MovieDetailsVM
 
 class MovieDetailFragment : Fragment() {
 
     private lateinit var viewModel: MovieDetailsVM
     private lateinit var binding: FragmentMovieDetailBinding
-
-    companion object {
-        private const val ARG_MOVIE_ID = "movie_id"
-
-        fun newInstance(movieId: Int): MovieDetailFragment {
-            val fragment = MovieDetailFragment()
-            val args = Bundle()
-            args.putInt(ARG_MOVIE_ID, movieId)
-            fragment.arguments = args
-            return fragment
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,16 +30,16 @@ class MovieDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[MovieDetailsVM::class.java]
 
-        val movieId = arguments?.getInt(ARG_MOVIE_ID)
-        if (movieId != null) {
-            viewModel.fetchMovieDetails()
-        }
+        val movieId = MovieDetailFragmentArgs.fromBundle(requireArguments()).movieId
 
-        viewModel.movie.observe(viewLifecycleOwner, Observer { movie ->
+        viewModel.movie.observe(viewLifecycleOwner) { movie ->
             if (movie != null) {
                 displayMovieDetails(movie)
             }
-        })
+        }
+
+        Log.d("Filter", "Fetching movieId $movieId")
+        viewModel.fetchMovieDetails(movieId)
     }
 
     private fun displayMovieDetails(movie: Movie) {
@@ -64,3 +51,5 @@ class MovieDetailFragment : Fragment() {
             .into(binding.moviePoster)
     }
 }
+
+

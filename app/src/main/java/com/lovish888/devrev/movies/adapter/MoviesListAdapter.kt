@@ -1,46 +1,68 @@
 package com.lovish888.devrev.movies.adapter
 
-import com.lovish888.devrev.movies.databinding.MovieItemBinding
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.request.RequestOptions
+import com.lovish888.devrev.movies.R
 import com.lovish888.devrev.movies.types.Movie
 
-class MoviesListAdapter(
-    private var movies: List<Movie>,
-    private val itemClickListener: OnItemClickListener
-) : RecyclerView.Adapter<MoviesListAdapter.MovieViewHolder>() {
-
-    interface OnItemClickListener {
-        fun onItemClick(movie: Movie)
-    }
-
-    fun setMovies(movies: List<Movie>) {
-        this.movies = movies
-    }
+class MoviesListAdapter(private val onClick: (Int) -> Unit) :
+    ListAdapter<Movie, MoviesListAdapter.MovieViewHolder>(MovieDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val binding = MovieItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MovieViewHolder(binding)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false)
+        return MovieViewHolder(view, onClick)
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(movies[position], itemClickListener)
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = movies.size
+    class MovieViewHolder(itemView: View, val onClick: (Int) -> Unit) :
+        RecyclerView.ViewHolder(itemView) {
+        private val movieTitle = itemView.findViewById<TextView>(R.id.movie_title)
+        private val moviesReleaseDate = itemView.findViewById<TextView>(R.id.movie_release_date)
+        private val moviePoster = itemView.findViewById<ImageView>(R.id.movie_poster)
+        private var currentMovie: Movie? = null
 
-    class MovieViewHolder(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(movie: Movie, clickListener: OnItemClickListener) {
-            binding.movieTitle.text = movie.title
-            binding.movieReleaseDate.text = movie.releaseDate
-            Glide.with(binding.root.context)
+        init {
+            itemView.setOnClickListener {
+                currentMovie?.let {
+                    onClick(it.id)
+                }
+            }
+        }
+
+        fun bind(movie: Movie) {
+            currentMovie = movie
+            movieTitle.text = movie.title
+            moviesReleaseDate.text = movie.releaseDate
+            Glide.with(itemView.context)
                 .load("https://image.tmdb.org/t/p/w500/${movie.posterPath}")
-//                .placeholder(R.drawable.placeholder)
-                .into(binding.moviePoster)
+                .apply(
+                    RequestOptions()
+                        .format(DecodeFormat.PREFER_ARGB_8888)
+                        .placeholder(R.drawable.movie_placeholder)
+                )
+                .into(moviePoster)
+        }
+    }
 
-            binding.root.setOnClickListener { clickListener.onItemClick(movie) }
+    class MovieDiffCallback : DiffUtil.ItemCallback<Movie>() {
+        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+            return oldItem == newItem
         }
     }
 }

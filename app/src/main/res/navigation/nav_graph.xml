@@ -2,26 +2,27 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/moviesListFragment">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/moviesListTabFragment">
 
     <fragment
-        android:id="@+id/moviesListFragment"
+        android:id="@+id/moviesListTabFragment"
         android:name="com.lovish888.devrev.movies.ui.MoviesListTabFragment"
+        android:label="MoviesListTabFragment"
         tools:layout="@layout/fragment_movies_list_tab">
         <action
-            android:id="@+id/action_moviesListFragment_to_movieDetailFragment"
+            android:id="@+id/action_moviesListTabFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/movieDetailFragment"
         android:name="com.lovish888.devrev.movies.ui.MovieDetailFragment"
+        android:label="MovieDetailFragment"
         tools:layout="@layout/fragment_movie_detail">
         <argument
             android:name="movieId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
-
 </navigation>
-

@@ -1,4 +1,5 @@
 package com.lovish888.devrev.movies.types
+
 import com.google.gson.annotations.SerializedName
 
 data class MovieListResponse(
